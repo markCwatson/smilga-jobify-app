@@ -1,12 +1,13 @@
-import Express from "express";
+import express from "express";
 
+import connectDb from './db/connect.js'
+
+// Middleware
 import notFound from "./middleware/not-found.js";
 import errorHandler from "./middleware/error-handler.js";
 
 
-const app = Express()
-
-// Must setup middleware before route definitions
+const app = express()
 
 app.get('/', (req, res) => {
     res.send('Hello!')
@@ -15,10 +16,21 @@ app.get('/', (req, res) => {
 app.use(notFound)
 app.use(errorHandler)
 
+let server
 
-const server = app.listen(process.env.PORT || 5000, () => {
-    console.log(`Server up on port ${process.env.PORT}`)
-})
+const start = async () => {
+    try {
+        const conn = await connectDb()
+        console.log(`MongoDB connected: ${conn.connection.host}`)
+        server = app.listen(process.env.PORT || 5000, () => {
+            console.log(`Server up on port ${process.env.PORT}`)
+        })        
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+start()
 
 process.on('unhandledRejection', (error, promise) => {
     console.log(`Error: ${error.message}`)
