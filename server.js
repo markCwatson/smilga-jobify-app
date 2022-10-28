@@ -1,6 +1,8 @@
 import express from "express";
 
 import connectDb from './db/connect.js'
+import authRouter from "./routes/auth.js";
+import jobsRouter from "./routes/jobs.js";
 
 // Middleware
 import notFound from "./middleware/not-found.js";
@@ -9,9 +11,14 @@ import errorHandler from "./middleware/error-handler.js";
 
 const app = express()
 
+app.use(express.json())
+
 app.get('/', (req, res) => {
     res.send('Hello!')
 })
+
+app.use('/api/v1/auth', authRouter)
+app.use('/api/v1/jobs', jobsRouter)
 
 app.use(notFound)
 app.use(errorHandler)
