@@ -4,7 +4,7 @@ const errorHandler = (err, req, res, next) => {
 
     res.status(error.status || 500).json({
         success: false,
-        error: error.message || 'Server Error'
+        message: error.message || 'Server Error'
       })
 }
 
